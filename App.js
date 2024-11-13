@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Intro from './screens/Intro';
+import LoginS from './screens/Login';
+import SignupScreen from './screens/Signup';
+import DashboardScreen from './screens/dashboard';
+import ProfileScreen from './screens/profile';
+import EventScreen from './screens/event';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Intro"
+        screenOptions={{
+          headerShown: false, // Hide headers for all screens
+          transitionSpec: {
+            open: { animation: 'timing', config: { duration: 300 } },
+            close: { animation: 'timing', config: { duration: 300 } },
+          },
+          cardStyleInterpolator: ({ current }) => ({
+            cardStyle: {
+              opacity: current.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+            },
+          }),
+        }}
+      >
+        <Stack.Screen name="Intro" component={Intro} />
+        <Stack.Screen name="Login" component={LoginS} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="Event" component={EventScreen}/>
+        <Stack.Screen name="Dashboard" component={DashboardScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
