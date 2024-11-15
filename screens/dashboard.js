@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
 const DashboardScreen = () => {
@@ -12,26 +11,12 @@ const DashboardScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Icon name="home" size={40} color="#4CAF50" />
-      </View>
-      <Text style={styles.heading}>Welcome to the Dashboard!</Text>
+  
+      <Text style={styles.heading}>Music is medicine</Text>
 
-      {/* Mini Cards Container */}
       <View style={styles.cardsContainer}>
         <TouchableOpacity style={styles.card} onPress={() => navigateTo('Dashboard')}>
-          <Icon name="film" size={30} color="#4CAF50" />
           <Text style={styles.cardText}>Sample Vid 3</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.card} onPress={() => navigateTo('Mp4')}>
-          <Icon name="film" size={30} color="#4CAF50" />
-          <Text style={styles.cardText}>Sample Vid 2</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.card} onPress={() => navigateTo('Profile')}>
-          <Icon name="film" size={30} color="#4CAF50" />
-          <Text style={styles.cardText}>sample vid 1</Text>
         </TouchableOpacity>
       </View>
 
@@ -56,13 +41,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'darkgreen',
+    backgroundColor: '#d9d9d9',
     padding: 20,
-  },
-  logoContainer: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
   },
   heading: {
     fontSize: 32,
@@ -71,14 +51,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   cardsContainer: {
-    flexDirection: 'row',
+    flexDirection: 'Column',
+    padding:5,
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     marginTop: 40,
   },
   card: {
-    width: 125,
-    height: 125,
+    width: 200,
+    height: 200,
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#4CAF50',
@@ -89,7 +70,7 @@ const styles = StyleSheet.create({
     elevation: 5, 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 5,
   },
   cardText: {
@@ -104,6 +85,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
     marginVertical: 20,
   },
+  VidCon:{
+    width:500,
+                                                                                    
+  },
   footer: {
     position: 'absolute',
     bottom: 20,
@@ -115,7 +100,7 @@ const styles = StyleSheet.create({
   },
   footerButton: {
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: 'green',
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -124,7 +109,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 16,
-    color: 'white',
+    color: 'green',
     fontWeight: 'bold',
   },
 });

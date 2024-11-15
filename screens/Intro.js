@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native'; // Import useNavigatio
 const Intro = () => {
   const navigation = useNavigation(); // Get the navigation object
 
-  // Handle screen navigation
   const handlePress = () => {
     navigation.navigate('Login'); // Navigate to the Login screen
   };

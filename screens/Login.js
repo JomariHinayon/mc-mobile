@@ -1,55 +1,84 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginS = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   
-  const navigation = useNavigation(); // Access the navigation prop
+  const navigation = useNavigation(); 
 
-  const handleLogin = () => {
-    navigation.navigate('Dashboard')
+  const handleLogin = async () => {
+    try {
+      const storedEmail = await AsyncStorage.getItem('email');
+      const storedPassword = await AsyncStorage.getItem('password');
+
+      // Validate that stored values are not null and are strings
+      if (!storedEmail || !storedPassword) {
+        setErrorMessage('No account found, please sign up first.');
+        return;
+      }
+
+      if (typeof storedEmail !== 'string' || typeof storedPassword !== 'string') {
+        setErrorMessage('Invalid data format in stored credentials.');
+        return;
+      }
+
+      if (storedEmail === email && storedPassword === password) {
+        Alert.alert('Login Successful', 'Welcome back!');
+        navigation.navigate('Dashboard');
+      } else {
+        setErrorMessage('Invalid email or password.');
+      }
+    } catch (error) {
+      console.error("Login error: ", error);
+      setErrorMessage('An error occurred. Please try again.');
+    }
   };
 
-  // Navigate to the Signup Screen
   const handleSignupNavigation = () => {
-    navigation.navigate('Signup'); // Navigate to the Signup screen
+    navigation.navigate('Signup');
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
         <Icon name="music" size={50} color="#4CAF50" />
+        <Text>MUSIC</Text>
       </View>
 
-      <Text style={styles.heading}>Login</Text>
+      <View style={styles.Logincon}>
+        <Text style={styles.heading}>Login</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Email"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log In</Text>
-      </TouchableOpacity>
+        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-      {/* Sign Up Button */}
-      <TouchableOpacity style={styles.signupButton} onPress={handleSignupNavigation}>
-        <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Log In</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.signupButton} onPress={handleSignupNavigation}>
+          <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -99,6 +128,22 @@ const styles = StyleSheet.create({
     color: '#4CAF50',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  Logincon: {
+    width: '100%',
+    justifyContent: 'center',
+    padding: 20,
+    alignItems: 'center',
+    borderRadius: 1,
+    shadowOffset: { width: 8, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 4,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 10,
   },
 });
 

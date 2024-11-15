@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignupScreen = () => {
-  // State hooks for form fields
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,15 +36,24 @@ const SignupScreen = () => {
     return true;
   };
 
-  // Handle form submission
-  const handleSubmit = () => {
+  // Save user data to AsyncStorage
+  const handleSubmit = async () => {
     if (validateForm()) {
-      Alert.alert('Signup Successful', 'Your account has been created!');
-      // Reset form
-      setUsername('');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
+      try {
+        // Save user details to AsyncStorage
+        await AsyncStorage.setItem('username', username);
+        await AsyncStorage.setItem('email', email);
+        await AsyncStorage.setItem('password', password);
+
+        Alert.alert('Signup Successful', 'Your account has been created!');
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        navigation.navigate('Login');
+      } catch (error) {
+        setErrorMessage('An error occurred. Please try again.');
+      }
     }
   };
 
@@ -52,51 +61,18 @@ const SignupScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Signup</Text>
 
-      {/* Username Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
+      <TextInput style={styles.input} placeholder="Username" value={username} onChangeText={setUsername} />
+      <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
+      <TextInput style={styles.input} placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
+      <TextInput style={styles.input} placeholder="Confirm Password" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry />
 
-      {/* Email Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-
-      {/* Password Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-
-      {/* Confirm Password Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-      />
-
-      {/* Display error message if validation fails */}
       {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-
-      {/* Signup Button */}
+      
       <Button title="Sign Up" onPress={handleSubmit} />
     </View>
   );
 };
 
-// Styling
 const styles = StyleSheet.create({
   container: {
     flex: 1,
